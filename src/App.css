@@ -1,0 +1,97 @@
+.hero {
+  height: 100svh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  /* Center the content above the contact footer */
+  padding: 0 20px var(--footer-h, 0px);
+  transition: padding 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  color: var(--banner-fg);
+  background: linear-gradient(
+    180deg,
+    var(--sky-deep) 0%,
+    var(--sky) 45%,
+    var(--sky-glow) 78%,
+    var(--clay) 100%
+  );
+}
+
+.hero h1 {
+  color: inherit;
+  margin: 0;
+}
+
+.hero__image {
+  display: block;
+  /* Shrinks on narrow or short screens so the description still fits when raised */
+  max-width: min(480px, 80vw);
+  max-height: 25svh;
+}
+
+/* Center the content in the space between the banner and the peeking sheet */
+.hero--raised {
+  padding: 64px 20px calc(100svh / 3);
+}
+
+/* Collapsed to zero height until raised, then grows and fades in */
+.hero__description {
+  display: grid;
+  grid-template-rows: 0fr;
+  max-width: 560px;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s;
+}
+
+.hero__description p {
+  overflow: hidden;
+  padding-top: 8px;
+  line-height: 1.5;
+}
+
+.hero--raised .hero__description {
+  grid-template-rows: 1fr;
+  opacity: 0.9;
+  transition-delay: 0s, 0.15s;
+}
+
+/* Sits above the sheet so it also closes off the peeking third */
+.landing-footer {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 95;
+  padding: 12px 24px calc(12px + env(safe-area-inset-bottom));
+  background: var(--surface);
+  transition:
+    opacity 0.2s,
+    visibility 0.2s;
+}
+
+.landing-footer--hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Compact so it fits in the peeking third on phones */
+.landing-footer .contact-info {
+  gap: 8px 24px;
+  padding-top: 12px;
+  font-size: 13px;
+}
+
+.landing-footer .contact-info__social a {
+  width: 32px;
+  height: 32px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero,
+  .hero__description,
+  .landing-footer {
+    transition: none;
+  }
+}

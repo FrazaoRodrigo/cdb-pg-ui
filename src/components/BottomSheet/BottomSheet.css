@@ -1,0 +1,311 @@
+.bottom-sheet {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 90;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  --gutter: 24px;
+  padding: 24px var(--gutter) 0;
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -8px 30px rgba(59, 42, 30, 0.2);
+  text-align: center;
+  transform: translateY(100%);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Only the top third is visible while peeking */
+.bottom-sheet--peek {
+  transform: translateY(calc(100svh * 2 / 3));
+  /* Room for the landing footer pinned over its bottom edge */
+  --footer-space: var(--footer-h, 0px);
+}
+
+/* Leave the top banner visible when expanded */
+.bottom-sheet--expanded {
+  transform: translateY(64px);
+}
+
+/* Side margins on large screens, growing with the window */
+@media (min-width: 1024px) {
+  .bottom-sheet--expanded {
+    --gutter: 7vw;
+  }
+}
+
+.bottom-sheet__header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 44px;
+}
+
+/* Title block spans the row and stays centered */
+.bottom-sheet__heading {
+  flex: 1;
+}
+
+/* Keep it clear of the collapse button, on both sides to stay centered */
+.bottom-sheet--expanded .bottom-sheet__heading {
+  padding: 0 60px;
+}
+
+.bottom-sheet__collapse {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent-bg);
+  color: var(--accent);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.bottom-sheet__collapse:hover {
+  background: var(--accent-border);
+}
+
+.bottom-sheet__collapse:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.bottom-sheet__body {
+  flex: 1;
+  /* Column so the contact footer can sit at the bottom */
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Keep content above the 64px offset when expanded */
+  padding: 16px 0 88px;
+  /* Scrollable, but without a visible scrollbar */
+  scrollbar-width: none;
+}
+
+.bottom-sheet__body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Activity images: a single row that fits in the peek third */
+.activity-strip {
+  flex-shrink: 0;
+  display: flex;
+  gap: 12px;
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 0 var(--gutter) 4px;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 var(--gutter);
+  touch-action: pan-x;
+}
+
+.activity-strip li {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+
+/* Centered when they fit; auto margins collapse to 0 once the strip overflows,
+   so the first card stays reachable (unlike justify-content: center) */
+.activity-strip li:first-child {
+  margin-left: auto;
+}
+
+.activity-strip li:last-child {
+  margin-right: auto;
+}
+
+.activity-card {
+  --card-h: clamp(72px, calc(100svh / 3 - 150px - var(--footer-space, 0px)), 200px);
+  position: relative;
+  display: block;
+  height: var(--card-h);
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--border);
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.activity-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.activity-card__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.25s;
+}
+
+/* Title is revealed over a greyed-out image on hover */
+.activity-card__name {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--banner-fg);
+  background: rgba(40, 40, 40, 0.45);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.activity-card:hover .activity-card__image,
+.activity-card:focus-visible .activity-card__image {
+  filter: grayscale(1) brightness(0.8);
+}
+
+.activity-card:hover .activity-card__name,
+.activity-card:focus-visible .activity-card__name {
+  opacity: 1;
+}
+
+/* No hover on touch screens: keep titles visible */
+@media (hover: none) {
+  .activity-card__name {
+    place-items: end center;
+    padding: 16px 10px 6px;
+    font-weight: 400;
+    background: linear-gradient(transparent, rgba(40, 40, 40, 0.75));
+    opacity: 1;
+  }
+}
+
+.activity-detail,
+.terms {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vw, 28px);
+  /* Text scales with the window, like the image below it */
+  font-size: clamp(16px, 1.1vw + 12px, 22px);
+}
+
+.terms {
+  font-size: clamp(14px, 0.6vw + 11px, 13px);
+}
+
+.terms__title {
+  margin: 0;
+  font-size: clamp(20px, 1.2vw + 14px, 28px);
+}
+
+.terms__text {
+text-align: left;
+}
+
+.terms p {
+  line-height: 1.6;
+}
+
+.bottom-sheet__back {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px 6px 6px;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.bottom-sheet__back:hover {
+  background: var(--accent-border);
+}
+
+.bottom-sheet__back:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.activity-detail__image {
+  width: 100%;
+  height: 50%;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.price-table {
+  width: 100%;
+  margin-top: 16px;
+  border-collapse: collapse;
+  font-size: 0.85em;
+  text-align: left;
+}
+
+.price-table th,
+.price-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.price-table thead th,
+.price-table__group th {
+  font-weight: 600;
+  color: var(--text-h);
+  border-bottom: 2px solid var(--accent-border);
+}
+
+.price-table tbody th {
+  font-weight: 400;
+}
+
+/* A title row partway down, styled like the table's header */
+.price-table .price-table__group th {
+  padding-top: 24px;
+  font-weight: 600;
+}
+
+/* Prices, and "upon request" spanning both, sit centered under their seasons */
+.price-table td,
+.price-table thead th:not(:first-child) {
+  text-align: center;
+}
+
+.price-table td {
+  white-space: nowrap;
+}
+
+.price-table__note {
+  margin: 8px 0 0;
+  font-size: 0.75em;
+  text-align: left;
+  opacity: 0.85;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bottom-sheet,
+  .bottom-sheet__collapse,
+  .activity-card__image,
+  .activity-card__name {
+    transition: none;
+  }
+}
