@@ -19,9 +19,9 @@
 
 /* Only the top third is visible while peeking */
 .bottom-sheet--peek {
-  transform: translateY(calc(100svh * 2 / 3));
-  /* Room for the landing footer pinned over its bottom edge */
-  --footer-space: var(--footer-h, 0px);
+  /* Raised by the landing footer's height, so the footer pinned over its
+     bottom edge never covers the content */
+  transform: translateY(calc(100svh * 2 / 3 - var(--footer-h, 0px)));
 }
 
 /* Leave the top banner visible when expanded */
@@ -129,7 +129,7 @@
 }
 
 .activity-card {
-  --card-h: clamp(72px, calc(100svh / 3 - 150px - var(--footer-space, 0px)), 200px);
+  --card-h: clamp(72px, calc(100svh / 3 - 150px), 200px);
   position: relative;
   display: block;
   height: var(--card-h);
@@ -246,7 +246,7 @@ text-align: left;
 
 .activity-detail__image {
   width: 100%;
-  height: 50%;
+  height: 25%;
   aspect-ratio: 16 / 9;
   object-fit: contain;
   border-radius: 12px;

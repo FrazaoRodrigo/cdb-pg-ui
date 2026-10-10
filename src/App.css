@@ -33,7 +33,7 @@
 
 /* Center the content in the space between the banner and the peeking sheet */
 .hero--raised {
-  padding: 64px 20px calc(100svh / 3);
+  padding: 64px 20px calc(100svh / 3 + var(--footer-h, 0px));
 }
 
 /* Collapsed to zero height until raised, then grows and fades in */
@@ -76,7 +76,7 @@
   visibility: hidden;
 }
 
-/* Compact so it fits in the peeking third on phones */
+/* Compact: it sits on top of the peeking sheet */
 .landing-footer .contact-info {
   gap: 8px 24px;
   padding-top: 12px;
@@ -86,6 +86,22 @@
 .landing-footer .contact-info__social a {
   width: 32px;
   height: 32px;
+}
+
+/* Phones: icons and terms share the first row, the address takes the second */
+@media (max-width: 600px) {
+  .landing-footer .contact-info {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    gap: 6px 16px;
+    font-size: 12px;
+  }
+
+  .landing-footer .contact-info__address {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
