@@ -78,7 +78,7 @@
 
 /* Compact: it sits on top of the peeking sheet */
 .landing-footer .contact-info {
-  gap: 8px 24px;
+  gap: 16px;
   padding-top: 12px;
   font-size: 13px;
 }
@@ -86,22 +86,6 @@
 .landing-footer .contact-info__social a {
   width: 32px;
   height: 32px;
-}
-
-/* Phones: icons and terms share the first row, the address takes the second */
-@media (max-width: 600px) {
-  .landing-footer .contact-info {
-    display: grid;
-    grid-template-columns: auto auto;
-    justify-content: space-between;
-    gap: 6px 16px;
-    font-size: 12px;
-  }
-
-  .landing-footer .contact-info__address {
-    grid-column: 1 / -1;
-    grid-row: 2;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

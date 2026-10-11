@@ -27,8 +27,11 @@ export default function ContactInfo({ onTermsClick }) {
       </div>
 
       <address className="contact-info__address">
-        <span>{contact.address}</span>
-        <a href={contact.mapsUrl} {...EXTERNAL}>
+        {/* On narrow screens the address itself is the maps link */}
+        <a href={contact.mapsUrl} className="contact-info__place" title={contact.address} {...EXTERNAL}>
+          {contact.address}
+        </a>
+        <a href={contact.mapsUrl} className="contact-info__maps" {...EXTERNAL}>
           {t.contact.maps}
         </a>
       </address>
