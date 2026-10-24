@@ -64,7 +64,12 @@ function Hero({ raised }) {
         onError={finishIntro}
       />
       <h1>
-        <img ref={imageRef} src={heroImage} alt={`${t.hero.title} – ${t.hero.subtitle}`} className="hero__image" />
+        <img
+          ref={imageRef}
+          src={heroImage}
+          alt={`${t.hero.title} – ${t.hero.subtitle}`}
+          className={`hero__image${raised ? ' hero__image--raised' : ''}`}
+        />
       </h1>
       <div className="hero__description" aria-hidden={!raised}>
         {t.hero.description.map((paragraph, i) => (

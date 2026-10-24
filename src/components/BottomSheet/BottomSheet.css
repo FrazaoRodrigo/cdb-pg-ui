@@ -259,6 +259,13 @@ text-align: left;
   object-fit: contain;
 }
 
+/* On phones the wide strip would be too thin, so the images are taller */
+@media (max-width: 760px) {
+  .gallery__image {
+    aspect-ratio: 4 / 3;
+  }
+}
+
 .gallery__arrow {
   position: absolute;
   top: 50%;
