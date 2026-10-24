@@ -5,12 +5,14 @@ export const translations = {
     hero: {
       title: 'Couto de Baixo',
       subtitle: 'Penha Garcia',
-      description: 'Sociedade Agrícola do Couto de Penha Garcia, Lda.  is a company that has been dedicated to agricultural and livestock farming in the vast area of Herdade do Couto de Baixo for 40 years.' + ' ' +
-      'To take advantage of the existing horses, with our recently renovated facilities and a qualified team, we are now offering a equestrian tourism service.',
+      description: ['Sociedade Agrícola do Couto de Baixo de Penha Garcia, Lda. carries out its operations across an extensive agricultural and livestock estate, where rural tradition meets the sustainable development of natural resources.',
+      'Located in Penha Garcia, in the municipality of Idanha-a-Nova, Couto de Baixo encompasses a diverse range of activities that reflect the richness and authenticity of the region. From cattle farming and olive oil production to the stewardship of natural resources and equestrian tourism.',
+      'Committed to respecting both nature and local traditions, we strive to cultivate a multifaceted operation that fosters a connection between agriculture, biodiversity, the bounty of the land, and immersive experiences within the rural world.'],
     },
     contact: {
       facebook: 'Facebook',
       instagram: 'Instagram',
+      whatsapp: 'WhatsApp',
       maps: 'View on Google Maps',
       terms: 'Terms and conditions',
     },
@@ -45,18 +47,34 @@ export const translations = {
     },
     sheet: {
       title: 'Discover more',
-      teaser: 'Here is a short preview. Expand to see everything.',
       collapse: 'Collapse',
       back: 'All activities',
+      previousImage: 'Previous image',
+      nextImage: 'Next image',
+      showImage: 'Show image',
     },
     activities: {
       'olive-oil': {
         name: 'Olive oil',
-        description: 'Short text description of activity 1.',
+        description: ['At our "Famoso Lagar", we produce our own organic olive oil and help other growers transform their olives into exceptional olive oils.',
+          ' Cold extraction preserves the natural characteristics of the olives, enhancing the aromas and flavors that distinguish each olive oil.'],
+        milling: 'Bring your olives and get your own olive oil for 0.18 €/kg.',
+        products: {
+          product: 'Our olive oil',
+          price: 'Price',
+          rows: {
+            bottle: '500 mL',
+            threeLitres: '3 L',
+            fiveLitres: '5 L',
+          },
+        },
+        certification: 'Organic certified',
       },
       'equestrian': {
         name: 'Equestrian tourism',
-        description: 'Provide unique and memorable experiences to our visitors, who can discover the beauty of nature while enjoying the stunning landscapes of Couto de Baixo in the company of our horses, who know it so well.',
+        description: ['Sociedade Agrícola do Couto de Penha Garcia, Lda. is a company that has been dedicated to agricultural and livestock farming in the vast area of Herdade do Couto de Baixo for 40 years.',
+          ' To take advantage of the existing horses, with our recently renovated facilities and a qualified team, we are now offering a equestrian tourism service.',
+          ' We aim to provide unique and memorable experiences to our visitors, who can discover the beauty of nature while enjoying the stunning landscapes of Couto de Baixo in the company of our horses, who know it so well.'],
         prices: {
           activity: 'Activity',
           lowSeason: 'November to April',
@@ -87,11 +105,11 @@ export const translations = {
       },
       'hunting': {
         name: 'Hunting tourism',
-        description: 'Short text description of activity 3.',
+        description: ['Short text description of activity 3.'],
       },
       'country-house': {
         name: 'Country house tourism',
-        description: 'Short text description of activity 4.',
+        description: ['Short text description of activity 4.'],
       },
     },
   },
@@ -101,12 +119,14 @@ export const translations = {
     hero: {
       title: 'Couto de Baixo',
       subtitle: 'Penha Garcia',
-      description: 'A Sociedade Agrícola do Couto de Baixo de Penha Garcia, Lda. é uma empresa que há 40 anos se dedica à exploração agrícola e pecuária na vasta área da Herdade do Couto de Baixo.' + ' ' +
-          'De forma a aproveitar o efetivo equino existente, com as nossas instalaçōes recentemente renovadas e uma equipa qualificada, estamos a oferecer um novo serviço de turismo equestre.',
+      description: ['A Sociedade Agrícola do Couto de Baixo de Penha Garcia, Lda. desenvolve a sua atividade numa vasta exploração agrícola e pecuária, onde a tradição rural se alia à valorização sustentável dos recursos naturais.',
+          'Situado em Penha Garcia, no concelho de Idanha-a-Nova, o Couto de Baixo reúne uma diversidade de atividades que refletem a riqueza e a autenticidade do território, desde a criação de gado e a produção de azeite até à valorização dos recursos naturais e ao turismo equestre.',
+          'Com um compromisso de respeito pela natureza e pelas tradições locais, procuramos desenvolver uma exploração diversificada, promovendo a ligação entre a agricultura, a biodiversidade, os produtos da terra e as experiências em contacto com o mundo rural.'],
     },
     contact: {
       facebook: 'Facebook',
       instagram: 'Instagram',
+      whatsapp: 'WhatsApp',
       maps: 'Ver no Google Maps',
       terms: 'Termos e condições',
     },
@@ -141,18 +161,34 @@ export const translations = {
     },
     sheet: {
       title: 'Descubra mais',
-      teaser: 'Aqui está uma breve pré-visualização. Expanda para ver tudo.',
       collapse: 'Recolher',
       back: 'Todas as atividades',
+      previousImage: 'Imagem anterior',
+      nextImage: 'Imagem seguinte',
+      showImage: 'Mostrar imagem',
     },
     activities: {
       'olive-oil': {
         name: 'Azeite',
-        description: 'Breve descrição da atividade 1.',
+        description: ['No nosso "Famoso Lagar", produzimos o nosso próprio azeite biológico e ajudamos outros produtores a transformar a sua azeitona em azeites de excelência.',
+          ' A extração a frio permite preservar as características naturais da azeitona, realçando os aromas e sabores que distinguem cada azeite.'],
+        milling: 'Traga as suas azeitonas e leve o seu próprio azeite por 0,18 €/kg.',
+        products: {
+          product: 'O nosso azeite',
+          price: 'Preço',
+          rows: {
+            bottle: '500 mL',
+            threeLitres: '3 L',
+            fiveLitres: '5 L',
+          },
+        },
+        certification: 'Certificado biológico',
       },
       'equestrian': {
         name: 'Turismo equestre',
-        description: 'Proporcionar experiências únicas e memoráveis aos nossos visitantes, descobrindo a beleza da natureza equanto desfrutam das paisagens deslumbrantes do Couto de Baixo na companhia dos nossos cavalos, que tāo bem a conhecem.',
+        description: ['A Sociedade Agrícola do Couto de Baixo de Penha Garcia, Lda. é uma empresa que há 40 anos se dedica à exploração agrícola e pecuária na vasta área da Herdade do Couto de Baixo.',
+          'De forma a aproveitar o efetivo equino existente, com as nossas instalaçōes recentemente renovadas e uma equipa qualificada, estamos a oferecer um novo serviço de turismo equestre.',
+          'Com o objetivo de proporcionar experiências únicas e memoráveis aos nossos visitantes, descobrindo a beleza da natureza equanto desfrutam das paisagens deslumbrantes do Couto de Baixo na companhia dos nossos cavalos, que tāo bem a conhecem.'],
         prices: {
           activity: 'Atividade',
           lowSeason: 'Novembro a abril',
@@ -183,11 +219,11 @@ export const translations = {
       },
       'hunting': {
         name: 'Turismo cinegético',
-        description: 'Breve descrição da atividade 3.',
+        description: ['Breve descrição da atividade 3.'],
       },
       'country-house': {
         name: 'Turismo casa',
-        description: 'Breve descrição da atividade 4.',
+        description: ['Breve descrição da atividade 4.'],
       },
     },
   },

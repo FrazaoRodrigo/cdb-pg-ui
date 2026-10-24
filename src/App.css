@@ -1,4 +1,6 @@
 .hero {
+  position: relative;
+  overflow: hidden;
   height: 100svh;
   box-sizing: border-box;
   display: flex;
@@ -10,13 +12,17 @@
   padding: 0 20px var(--footer-h, 0px);
   transition: padding 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   color: var(--banner-fg);
-  background: linear-gradient(
-    180deg,
-    var(--sky-deep) 0%,
-    var(--sky) 45%,
-    var(--sky-glow) 78%,
-    var(--clay) 100%
-  );
+  /* Background image,
+     with the sky gradient showing until it loads */
+  background:
+    url('./assets/draw.png') center / cover no-repeat,
+    linear-gradient(
+      180deg,
+      var(--sky-deep) 0%,
+      var(--sky) 45%,
+      var(--sky-glow) 78%,
+      var(--clay) 100%
+    );
 }
 
 .hero h1 {
@@ -24,23 +30,59 @@
   margin: 0;
 }
 
+/* Fills the hero behind its content, fading out once it has played */
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s;
+}
+
+.hero--intro .hero__video {
+  opacity: 1;
+}
+
+/* Content stays above the video */
+.hero h1,
+.hero__description {
+  position: relative;
+}
+
 .hero__image {
   display: block;
   /* Shrinks on narrow or short screens so the description still fits when raised */
   max-width: min(480px, 80vw);
-  max-height: 25svh;
+  max-height: 22svh;
+  background: rgba(255, 255, 255, 0);
+  padding: 16px;
+  backdrop-filter: blur(0.9px);
 }
 
-/* Center the content in the space between the banner and the peeking sheet */
+/* While the video plays the title image sits small in the top right corner,
+   below the banner; it moves back to the center when the video ends */
+.hero--intro .hero__image {
+  position: fixed;
+  top: calc(64px + 16px);
+  right: 24px;
+  max-width: min(200px, 40vw);
+  max-height: 12svh;
+}
+
+/* Center the content in the space between the banner and the peeking sheet,
+   which shows a third of the screen less its 44px header */
 .hero--raised {
-  padding: 64px 20px calc(100svh / 3 + var(--footer-h, 0px));
+  padding: 64px 20px calc(100svh / 3 - 44px + var(--footer-h, 0px));
 }
 
 /* Collapsed to zero height until raised, then grows and fades in */
 .hero__description {
   display: grid;
   grid-template-rows: 0fr;
-  max-width: 560px;
+  max-width: 710px;
   opacity: 0;
   transition:
     grid-template-rows 0.45s cubic-bezier(0.22, 1, 0.36, 1),
@@ -51,6 +93,10 @@
   overflow: hidden;
   padding-top: 8px;
   line-height: 1.5;
+    background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  padding: 0.5rem;
+  border-radius: 12px;
 }
 
 .hero--raised .hero__description {
@@ -90,6 +136,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hero,
+  .hero__video,
   .hero__description,
   .landing-footer {
     transition: none;

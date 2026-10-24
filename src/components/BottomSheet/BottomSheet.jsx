@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../../i18n/LanguageContext'
 import { activities } from '../../domain/activities'
 import ContactInfo from '../ContactInfo/ContactInfo'
@@ -122,6 +122,7 @@ export default function BottomSheet({
   const expanded = state === 'expanded'
   const selected = expanded ? activities.find((a) => a.id === selectedId) : null
   const showTerms = expanded && termsOpen
+  const equestrianOpen = selected?.id === 'equestrian' && !showTerms
 
   const collapse = () => {
     lastChange.current = Date.now()
@@ -150,28 +151,25 @@ export default function BottomSheet({
       inert={state === 'hidden'}
       aria-label={t.sheet.title}
     >
-      <div className="bottom-sheet__header">
-        {/* With an activity open its name shows in the top banner instead */}
-        {selected || showTerms ? (
-          <button type="button" className="bottom-sheet__back" onClick={back}>
-            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-              <path
-                d="M15 6l-6 6 6 6"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            {t.sheet.back}
-          </button>
-        ) : (
-          <div className="bottom-sheet__heading">
-            <p className="bottom-sheet__teaser">{t.sheet.teaser}</p>
-          </div>
-        )}
-        {expanded && (
+      {/* Only when expanded: while peeking its space goes to the hero */}
+      {expanded && (
+        <div className="bottom-sheet__header">
+          {/* With an activity open its name shows in the top banner instead */}
+          {(selected || showTerms) && (
+            <button type="button" className="bottom-sheet__back" onClick={back}>
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path
+                  d="M15 6l-6 6 6 6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {t.sheet.back}
+            </button>
+          )}
           <button
             type="button"
             className="bottom-sheet__collapse"
@@ -189,8 +187,8 @@ export default function BottomSheet({
               />
             </svg>
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="bottom-sheet__body" ref={bodyRef}>
         {showTerms ? (
@@ -202,14 +200,22 @@ export default function BottomSheet({
             {activities.map(({ id, image }) => (
               <li key={id}>
                 <button type="button" className="activity-card" data-id={id} onClick={openActivity}>
-                  <img src={image} alt="" className="activity-card__image" />
+                  <span className="activity-card__frame">
+                    <img src={image} alt="" className="activity-card__image" />
+                  </span>
                   <span className="activity-card__name">{t.activities[id].name}</span>
                 </button>
               </li>
             ))}
           </ul>
         )}
-        {expanded && <ContactInfo onTermsClick={() => setTermsOpen(true)} />}
+        {/* The social links and terms only apply to the equestrian activity */}
+        {expanded && (
+          <ContactInfo
+            social={equestrianOpen}
+            onTermsClick={equestrianOpen ? () => setTermsOpen(true) : null}
+          />
+        )}
       </div>
     </section>
   )
@@ -220,15 +226,129 @@ function ActivityDetail({ activity }) {
   const text = t.activities[activity.id]
   return (
     <article className="activity-detail">
-      <p>{text.description}</p>
-      <img src={activity.image} alt="" className="activity-detail__image" />
+      {text.description.map((paragraph, i) => (
+        <p key={i} >{paragraph}</p>
+      ))}
+      <Gallery key={activity.id} images={activity.gallery} />
+      {text.milling && <p className="activity-detail__milling">{text.milling}</p>}
+      {activity.products && <ProductTable rows={activity.products} text={text.products} />}
       {(activity.prices || activity.lessons) && (
         <section>
           {activity.prices && <PriceTable rows={activity.prices} text={text.prices} />}
           {activity.lessons && <LessonTable groups={activity.lessons} text={text.lessons} />}
         </section>
       )}
+      {activity.certification && (
+        <p className="certification">
+          <img src={activity.certification} alt="" className="certification__icon" />
+          {text.certification}
+        </p>
+      )}
     </article>
+  )
+}
+
+// Images slide sideways, snapping one at a time. Arrows (for mouse users) and
+// dots are shown only when there is more than one.
+function Gallery({ images }) {
+  const { t } = useLanguage()
+  const trackRef = useRef(null)
+  const [index, setIndex] = useState(0)
+  const many = images.length > 1
+
+  const goTo = (i) => {
+    const track = trackRef.current
+    track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' })
+  }
+
+  const onScroll = (e) => {
+    const track = e.currentTarget
+    setIndex(Math.round(track.scrollLeft / track.clientWidth))
+  }
+
+  return (
+    <div className="gallery">
+      <ul className="gallery__track" ref={trackRef} onScroll={onScroll}>
+        {images.map((src, i) => (
+          <li key={i} className="gallery__slide">
+            <img src={src} alt="" className="gallery__image" />
+          </li>
+        ))}
+      </ul>
+      {many && (
+        <>
+          <button
+            type="button"
+            className="gallery__arrow gallery__arrow--prev"
+            aria-label={t.sheet.previousImage}
+            disabled={index === 0}
+            onClick={() => goTo(index - 1)}
+          >
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+              <path
+                d="M15 6l-6 6 6 6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            className="gallery__arrow gallery__arrow--next"
+            aria-label={t.sheet.nextImage}
+            disabled={index === images.length - 1}
+            onClick={() => goTo(index + 1)}
+          >
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+              <path
+                d="M9 6l6 6-6 6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+          <div className="gallery__dots">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                className="gallery__dot"
+                aria-label={`${t.sheet.showImage} ${i + 1}`}
+                aria-current={i === index}
+                onClick={() => goTo(i)}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
+function ProductTable({ rows, text }) {
+  return (
+    <table className="price-table price-table--half">
+      <thead>
+        <tr>
+          <th scope="col">{text.product}</th>
+          <th scope="col">{text.price}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(({ id, price }) => (
+          <tr key={id}>
+            <th scope="row">{text.rows[id]}</th>
+            <td>{price}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   )
 }
 

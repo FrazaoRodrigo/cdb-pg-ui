@@ -59,6 +59,8 @@
   flex-shrink: 0;
   display: flex;
   gap: 4px;
+  background: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(0.9px);
 }
 
 .lang-selector__btn {

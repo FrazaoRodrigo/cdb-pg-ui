@@ -5,5 +5,7 @@ export const contact = {
   facebook: 'https://www.facebook.com/',
   instagram: 'https://www.instagram.com/',
   address,
+  email: 'david.frazao.coutodebaixo@gmail.com',
+  phone: '+351 968992566',
   mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`,
 }

@@ -2,11 +2,13 @@
   position: fixed;
   inset: auto 0 0 0;
   z-index: 90;
-  height: 100svh;
+  height: 95svh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   --gutter: 24px;
+  /* The header (shown only when expanded) */
+  --sheet-header-h: 44px;
   padding: 24px var(--gutter) 0;
   background: var(--surface);
   color: var(--text);
@@ -17,16 +19,16 @@
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Only the top third is visible while peeking */
+/* Only the top third is visible while peeking, less the header it hides */
 .bottom-sheet--peek {
   /* Raised by the landing footer's height, so the footer pinned over its
      bottom edge never covers the content */
-  transform: translateY(calc(100svh * 2 / 3 - var(--footer-h, 0px)));
+  transform: translateY(calc(100svh * 2 / 3 + var(--sheet-header-h) - var(--footer-h, 0px)));
 }
 
 /* Leave the top banner visible when expanded */
 .bottom-sheet--expanded {
-  transform: translateY(64px);
+  transform: translateY(21px);
 }
 
 /* Side margins on large screens, growing with the window */
@@ -42,17 +44,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  min-height: 44px;
-}
-
-/* Title block spans the row and stays centered */
-.bottom-sheet__heading {
-  flex: 1;
-}
-
-/* Keep it clear of the collapse button, on both sides to stay centered */
-.bottom-sheet--expanded .bottom-sheet__heading {
-  padding: 0 60px;
+  min-height: var(--sheet-header-h);
 }
 
 .bottom-sheet__collapse {
@@ -90,7 +82,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   /* Keep content above the 64px offset when expanded */
-  padding: 16px 0 88px;
+  padding: 20px 0 88px;
   /* Scrollable, but without a visible scrollbar */
   scrollbar-width: none;
 }
@@ -128,70 +120,59 @@
   margin-right: auto;
 }
 
+/* Image with its title below it */
 .activity-card {
-  --card-h: clamp(72px, calc(100svh / 3 - 150px), 200px);
-  position: relative;
-  display: block;
-  height: var(--card-h);
-  aspect-ratio: 4 / 3;
+  /* Leaves room for the title within the peek third */
+  --card-h: clamp(72px, calc(100svh / 3 - 178px), 200px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   padding: 0;
   border: none;
-  border-radius: 12px;
-  overflow: hidden;
-  background: var(--border);
+  background: none;
+  color: var(--text);
+  font: inherit;
   cursor: pointer;
-  box-shadow: var(--shadow);
 }
 
 .activity-card:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+  border-radius: 12px;
+}
+
+.activity-card__frame {
+  display: block;
+  height: var(--card-h);
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--border);
+  box-shadow: var(--shadow);
 }
 
 .activity-card__image {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: filter 0.25s;
 }
 
-/* Title is revealed over a greyed-out image on hover */
+/* As wide as the image, never wider */
 .activity-card__name {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 8px;
+  width: 0;
+  min-width: 100%;
   font-size: 15px;
   font-weight: 600;
   line-height: 1.2;
   text-align: center;
-  color: var(--banner-fg);
-  background: rgba(40, 40, 40, 0.45);
-  opacity: 0;
-  transition: opacity 0.25s;
 }
 
+/* The image is greyed out on hover */
 .activity-card:hover .activity-card__image,
 .activity-card:focus-visible .activity-card__image {
   filter: grayscale(1) brightness(0.8);
-}
-
-.activity-card:hover .activity-card__name,
-.activity-card:focus-visible .activity-card__name {
-  opacity: 1;
-}
-
-/* No hover on touch screens: keep titles visible */
-@media (hover: none) {
-  .activity-card__name {
-    place-items: end center;
-    padding: 16px 10px 6px;
-    font-weight: 400;
-    background: linear-gradient(transparent, rgba(40, 40, 40, 0.75));
-    opacity: 1;
-  }
 }
 
 .activity-detail,
@@ -244,12 +225,103 @@ text-align: left;
   outline-offset: 2px;
 }
 
-.activity-detail__image {
-  width: 100%;
-  height: 25%;
-  aspect-ratio: 16 / 9;
-  object-fit: contain;
+/* Image gallery: one image at a time, slid sideways */
+.gallery {
+  position: relative;
+}
+
+.gallery__track {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
   border-radius: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.gallery__track::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery__slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+}
+
+.gallery__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16 / 5;
+  object-fit: contain;
+}
+
+.gallery__arrow {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 250, 242, 0.85);
+  color: var(--accent);
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: opacity 0.2s;
+}
+
+.gallery__arrow--prev {
+  left: 12px;
+}
+
+.gallery__arrow--next {
+  right: 12px;
+}
+
+.gallery__arrow:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gallery__arrow:focus-visible,
+.gallery__dot:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Touch screens swipe instead */
+@media (hover: none) {
+  .gallery__arrow {
+    display: none;
+  }
+}
+
+.gallery__dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.gallery__dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent-border);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.gallery__dot[aria-current='true'] {
+  background: var(--accent);
 }
 
 .price-table {
@@ -301,11 +373,44 @@ text-align: left;
   opacity: 0.85;
 }
 
+/* The olive oil details sit to the left */
+.activity-detail__milling {
+  text-align: left;
+}
+
+/* Half the width, at the left; full width on narrow screens */
+.price-table--half {
+  width: 50%;
+}
+
+@media (max-width: 760px) {
+  .price-table--half {
+    width: 100%;
+  }
+}
+
+/* Closing note with its certification logo */
+.certification {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.certification__icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bottom-sheet,
   .bottom-sheet__collapse,
   .activity-card__image,
-  .activity-card__name {
+  .gallery__arrow,
+  .gallery__dot {
     transition: none;
   }
 }
